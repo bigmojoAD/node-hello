@@ -23,10 +23,11 @@ jobs:
       uses: docker/build-push-action@v2
       with:
         push: true
-        tags: ukamed/my-node-app:${{ env.TAG }}
+        tags: ukamed/my-node-app:${{ steps.vars.outputs.short_sha }}
 
-    - name: Set Docker Image tag
-      env:
-        TAG: ${{ env.TAG }}
+    - name: Set short git commit SHA
+      id: vars
       run: |
-        echo "::set-env name=TAG::$(date +%s)"
+        ls -la
+        calculatedSha=$(git rev-parse --short ${{ github.sha }})
+        echo "::set-output name=short_sha::$calculatedSha"
