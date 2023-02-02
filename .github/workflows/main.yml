@@ -12,12 +12,18 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
-
+      
+    - name: Login to Docker registry
+      uses: docker/login-action@v1
+      with:
+        username: ukamed
+        password: ${{ secrets.DOCKER_REGISTRY_PASSWORD }}
+    
     - name: Build Docker Image
       uses: docker/build-push-action@v2
       with:
         push: true
-        tags: my-registry.com/my-node-app:${{ env.TAG }}
+        tags: ukamed/my-node-app:${{ env.TAG }}
 
     - name: Set Docker Image tag
       env:
