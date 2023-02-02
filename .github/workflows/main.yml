@@ -1,0 +1,26 @@
+name: Build and Push Docker Image
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Build Docker Image
+      uses: docker/build-push-action@v2
+      with:
+        push: true
+        tags: my-registry.com/my-node-app:${{ env.TAG }}
+
+    - name: Set Docker Image tag
+      env:
+        TAG: ${{ env.TAG }}
+      run: |
+        echo "::set-env name=TAG::$(date +%s)"
