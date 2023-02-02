@@ -18,12 +18,6 @@ jobs:
       with:
         username: ukamed
         password: ${{ secrets.DOCKER_REGISTRY_PASSWORD }}
-    
-    - name: Build Docker Image
-      uses: docker/build-push-action@v2
-      with:
-        push: true
-        tags: ukamed/my-node-app:${{ steps.vars.outputs.short_sha }}
 
     - name: Set short git commit SHA
       id: vars
@@ -31,3 +25,12 @@ jobs:
         ls -la
         calculatedSha=$(git rev-parse --short ${{ github.sha }})
         echo "::set-output name=short_sha::$calculatedSha"
+        
+    - name: Confirm git commit SHA output
+      run: echo ${{ steps.vars.outputs.short_sha }}
+    
+    - name: Build Docker Image
+      uses: docker/build-push-action@v2
+      with:
+        push: true
+        tags: ukamed/my-node-app:${{ steps.vars.outputs.short_sha }}
